@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo République - Magasin & Laboratoire Photo à Marseille</title>
+    <style>
+        :root {
+            --primary-color: #d32f2f;
+            --secondary-color: #333;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --accent-color: #ffc107;
+            --success-color: #28a745;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .status-banner {
+            text-align: center;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .status-open {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-closed {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        ul li::before {
+            content: "•";
+            color: var(--primary-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .contact-info p {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-info svg {
+            margin-right: 10px;
+            fill: var(--primary-color);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #b71c1c;
+        }
+
+        .services-search {
+            margin-bottom: 20px;
+        }
+
+        #serviceSearch {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .highlight {
+            background-color: var(--accent-color);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .badge {
+            background-color: #e0e0e0;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-left: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 40px;
+        }
+
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+        }
+
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Photo République</h1>
+    <p>Votre magasin et laboratoire photo à Marseille</p>
+</header>
+
+<div class="container">
+
+    <div id="storeStatus" class="status-banner">Calcul des horaires...</div>
+
+    <div class="services-search">
+        <input type="text" id="serviceSearch" placeholder="Rechercher un service, un produit (ex: visa, pellicule, developpement)...">
+    </div>
+
+    <div class="grid">
+        <div class="card contact-info">
+            <h2>Coordonnées & Accès</h2>
+            <p>
+                <svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                1 rue Félix Éboué, 13002 Marseille
+            </p>
+            <p>
+                <svg width="20" height="20" viewBox="0 0 24 24"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.14-3.75-6.58-6.58l2.2-2.2c.28-.28.36-.67.25-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1zM19 12h2c0-4.97-4.03-9-9-9v2c3.87 0 7 3.13 7 9zm-4 0h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3z"/></svg>
+                <a href="tel:+33491314151" style="color: var(--text-color); font-weight: bold;">04 91 31 41 51</a>
+            </p>
+            <p>
+                <svg width="20" height="20" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <a href="mailto:fotobox29@gmail.com" style="color: var(--text-color); font-weight: bold;">fotobox29@gmail.com</a>
+            </p>
+            <p>
+                <svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 2C8.14 2 5 2.14 5 2.14c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h.5v12.5C5.5 19.33 6.67 20.5 8.5 20.5h7c1.83 0 3-1.17 3-3.05V5.14H19c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1 0 0-3.14-.14-7-.14zM8 5h8v12H8V5zm2 2v8h1V7h-1zm3 0v8h1V7h-1z"/></svg>
+                <strong>Transports :</strong> Tramway, Arrêt Sadi Carnot
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Horaires d'ouverture</h2>
+            <p><strong>Du lundi au samedi :</strong></p>
+            <ul>
+                <li>Matin : 09h00 - 12h00</li>
+                <li>Après-midi : 14h00 - 18h00</li>
+            </ul>
+            <p><em>Fermé le dimanche.</em></p>
+        </div>
+    </div>
+
+    <div class="grid" style="margin-top: 20px;">
+        <div class="card" style="grid-column: 1 / -1;">
+            <h2>Services & Produits</h2>
+            <input type="text" id="serviceSearchMobile" placeholder="Filtrer les services et produits..." style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; display: none;">
+            
+            <div id="servicesList">
+                <h3>📸 Photographie & Identité</h3>
+                <ul>
+                    <li class="service-item">Photos d'identité officielles <span class="badge">Conforme</span></li>
+                    <li class="service-item">Photos pour permis de conduire</li>
+                    <li class="service-item">Photos pour carte de séjour</li>
+                    <li class="service-item">Photos pour Visa Américain (USA)</li>
+                    <li class="service-item">Photos pour Visa Indien</li>
+                    <li class="service-item">Retouches photos</li>
+                </ul>
+
+                <h3>🎞️ Laboratoire & Tirage</h3>
+                <ul>
+                    <li class="service-item">Laboratoire photo complet</li>
+                    <li class="service-item">Développement de pellicules</li>
+                    <li class="service-item">Numérisation de négatifs et photos</li>
+                    <li class="service-item">Impressions noir et blanc et couleur</li>
+                    <li class="service-item">Borne de tirage express</li>
+                    <li class="service-item">Envoi des fichiers via WeTransfer (formats JPEG et Tiff)</li>
+                    <li class="service-item">Délais rapides : dans la journée ou <span class="highlight">moins de 48 heures</span> pour le noir et blanc</li>
+                </ul>
+
+                <h3>📼 Transfert Vidéo</h3>
+                <ul>
+                    <li class="service-item">Transfert de films Super 8</li>
+                    <li class="service-item">Transfert de cassettes (K7) et autres vidéos</li>
+                </ul>
+
+                <h3>🛒 Vente en magasin</h3>
+                <ul>
+                    <li class="service-item">Pellicules Kodak couleur et noir et blanc (formats 120 et 135)</li>
+                    <li class="service-item">Papier photo noir et blanc</li>
+                    <li class="service-item">Chimie Ilford</li>
+                    <li class="service-item">Piles au lithium</li>
+                    <li class="service-item">Photocopies</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>&copy; 2026 Photo République - Marseille. Tous droits réservés.</p>
+</footer>
+
+<div id="toastNotification" class="toast"><span id="toastMessage"></span></div>
+
+<script>
+    function checkStoreStatus() {
+        const now = new Date();
+        const day = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+        const hour = now.getHours();
+        const minutes = now.getMinutes();
+        const currentTimeInMinutes = hour * 60 + minutes;
+
+        const banner = document.getElementById('storeStatus');
+        
+        // Monday (1) to Saturday (6)
+        if (day >= 1 && day <= 6) {
+            const morningOpen = 9 * 60; // 9:00
+            const morningClose = 12 * 60; // 12:00
+            const afternoonOpen = 14 * 60; // 14:00
+            const afternoonClose = 18 * 60; // 18:00
+
+            const isMorning = currentTimeInMinutes >= morningOpen && currentTimeInMinutes < morningClose;
+            const isAfternoon = currentTimeInMinutes >= afternoonOpen && currentTimeInMinutes < afternoonClose;
+
+            if (isMorning || isAfternoon) {
+                banner.textContent = "🟢 Actuellement OUVERT - Nous vous accueillons jusqu'à " + (isMorning ? "12h00" : "18h00");
+                banner.className = "status-banner status-open";
+            } else if (currentTimeInMinutes < morningOpen) {
+                banner.textContent = "🔴 Actuellement FERMÉ - Ouverture à 09h00";
+                banner.className = "status-banner status-closed";
+            } else if (currentTimeInMinutes >= morningClose && currentTimeInMinutes < afternoonOpen) {
+                banner.textContent = "🔴 Actuellement FERMÉ (Pause déjeuner) - Réouverture à 14h00";
+                banner.className = "status-banner status-closed";
+            } else {
+                banner.textContent = "🔴 Actuellement FERMÉ - Ouverture demain à 09h00";
+                banner.className = "status-banner status-closed";
+            }
+        } else {
+            // Sunday
+            banner.textContent = "🔴 Actuellement FERMÉ - Ouverture lundi à 09h00";
+            banner.className = "status-banner status-closed";
+        }
+    }
+
+    function setupSearch() {
+        const searchInput = document.getElementById('serviceSearch');
+        const items = document.querySelectorAll('.service-item');
+
+        searchInput.addEventListener('input', function() {
+            const filter = searchInput.value.toLowerCase();
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    item.style.display = "";
+                    const regex = new RegExp('(' + filter + ')', 'gi');
+                    item.innerHTML = item.textContent.replace(regex, '<span class="highlight">$1</span>');
+                } else {
+                    item.style.display = "none";
+                }
+            });
+            
+            // Hide empty categories
+            const lists = document.querySelectorAll('#servicesList > ul');
+            lists.forEach(ul => {
+                const visibleItems = ul.querySelectorAll('li[style=""]').length;
+                const categoryHeader = ul.previousElementSibling;
+                if (categoryHeader && categoryHeader.tagName === 'H3') {
+                     if (visibleItems === 0 && filter !== "") {
+                         categoryHeader.style.display = 'none';
+                     } else {
+                         categoryHeader.style.display = '';
+                     }
+                }
+            });
+        });
+    }
+
+    function setupCopyEmail() {
+        const emailLink = document.querySelector('a[href^="mailto:"]');
+        if (emailLink) {
+            emailLink.addEventListener('click', function(e) {
+                showToast("Ouverture de votre application de messagerie...");
+            });
+        }
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById("toastNotification");
+        const toastMsg = document.getElementById("toastMessage");
+        toastMsg.textContent = message;
+        toast.className = "toast show";
+        setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    window.onload = function() {
+        checkStoreStatus();
+        setupSearch();
+        setupCopyEmail();
+        setInterval(checkStoreStatus, 60000);
+    };
+</script>
+
+</body>
+</html>
